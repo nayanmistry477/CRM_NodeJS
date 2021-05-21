@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    td,
+    th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <img style="width:30% !important"
+    src="https://i2.wp.com/www.bmtechservices.co.uk/wp-content/uploads/2020/08/B-M-Tech-Services-final-file_400.png">
+ 
+  <h2>Stock Report </h2>
+  <p>From Date <%= data.dates.start %> To <%= data.dates.end %>
+  </p>
+
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Product Name</th>
+      <th>Inward</th>
+      <th>Outward</th>
+      <th>Available Stock</th>
+    </tr>
+    <% if (data.data.length> 0) { %>
+      <% data.data.forEach(item=> {%>
+        <tr>
+          <td>
+            <%= item.productId %>
+          </td>
+          <td>
+            <%= item.name %>
+          </td>
+          <td>
+            <%= item.Inward %>
+          </td>
+          <td>
+            <%= item.Outward %>
+          </td>
+          <td>
+            <%= item.pendingQty %>
+          </td>
+
+        </tr>
+
+        <% });%>
+          <% }%>
+
+  </table>
+
+</body>
+
+</html>

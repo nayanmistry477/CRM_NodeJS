@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+
+
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+    <title></title>
+    <meta name="generator" content="https://conversiontools.io" />
+    <meta name="author" content="William Amos" />
+    <meta name="created" content="2021-04-04T11:16:43" />
+    <meta name="changedby" content="William Amos" />
+    <meta name="changed" content="2021-04-04T12:19:18" />
+    <meta name="AppVersion" content="16.0300" />
+    <meta name="DocSecurity" content="0" />
+    <meta name="HyperlinksChanged" content="false" />
+    <meta name="LinksUpToDate" content="false" />
+    <meta name="ScaleCrop" content="false" />
+    <meta name="ShareDoc" content="false" />
+
+    <style type="text/css">
+        body,
+        div,
+        table,
+        thead,
+        tbody,
+        tfoot,
+        tr,
+        th,
+        td,
+        p {
+            font-family: "Calibri";
+            /* font-size: 15px */
+        }
+
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+            /* padding: 50px; */
+        }
+
+        .done{
+            position: absolute;
+            left: 28%;
+            font-size: 15px;
+            padding: 10px;
+        }
+        .note{
+            position: absolute;
+            left: 60%;
+            font-size: 15px;
+            padding: 10px; 
+            /* Should be removed. Only for demonstration */
+        }
+    </style>
+</head>
+
+<body style="padding-left:8%;">
+    <table border="1" cellpadding="0" cellspacing="0" style="width: 90%;">
+        <tr style="text-align: center;">
+           
+            <td colspan="2" style="font-size: 15px;padding: 2%;"> <%= data.createdDate %> <%= data.time %></td> 
+         
+            <td  >
+                   <% if (data.customerContact !="" ) { %>
+                <%= data.customerContact %>
+                    <% }%>
+                        &nbsp; </td>
+            <td >   
+                <% if (data.customer !="" ) { %>
+                <%= data.customer %>
+                    <% }%>
+                        &nbsp; </td>              
+        </tr>
+        <tr style="text-align: center; font-size: 15px;padding: 2%;">
+            <td>&nbsp; &nbsp; &nbsp;   <%= data.id %>&nbsp; &nbsp; &nbsp;  </td>
+            <td  >   <% if (data.brand !="" ) { %>
+                <%= data.brand %>
+                    <% }%>
+                        &nbsp; </td>
+            <td>   <% if (data.password !="" ) { %>
+                <%= data.password %>
+                    <% }%>
+                        &nbsp; </td> 
+            
+            <td >   
+                <% if (data.assignedTo !="" ) { %>
+                <%= data.assignedTo %>
+                    <% }%>
+                        &nbsp; </td> 
+        </tr>
+        <!-- <tr style="text-align: center;">
+            <td style="padding: 12px;"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr> -->
+        <tr>
+            <td colspan="6" style="padding-top: 15%;">
+                <img style="float: right;" width="20%" src="<%= data.pathVal %>">
+            </td>
+        </tr>
+    </table>
+    <div style="text-align: center;padding: 5px;margin-right: 6%;">Parts Used</div>
+    <table border="1" cellpadding="0" cellspacing="0" style="width: 90%;">
+        <tr>
+            <td style="padding: 10px;"></td>
+            <td style="padding: 10px;"></td>
+            <td style="padding: 10px;"></td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;"></td>
+            <td style="padding: 10px;"></td>
+            <td style="padding: 10px;"></td>
+        </tr>
+        <tr>
+            <td style="padding: 10px;"></td>
+            <td style="padding: 10px;"></td>
+            <td style="padding: 10px;"></td>
+        </tr>
+    </table>
+    <div class="row">
+        <div class="done">Done?</div>
+        <div class="note">Note</div>
+    </div>
+    <br><br>
+    <table  border="1" cellpadding="0" cellspacing="0" style="width: 90%;">
+       
+        <% if (data.checkList.length> 0) { %>
+            <% data.checkList.forEach(item=> {%>
+                <tr>
+                    <td style="width: 25%;font-size: 15px;">   <%= item.name %></td>
+                    <td style="width: 15%;font-size: 15px;"></td>
+                    <td style="width: 75%;font-size: 15px;"></td>
+                </tr> 
+              <% });%>
+          <% }%>
+          <tr></tr>
+          <tr></tr>
+          <tr></tr>
+          <tr></tr>
+    </table>
+    <br><br>
+    <div class="row" style="position: fixed;width: 90%;bottom: 10px;">
+        <span style="float: left;padding-left: 10%;">Completed By</span>
+        <span style="float: right;padding-right: 10%;">Date</span>
+    </div>
+    <br>
+</body>
+
+</html>

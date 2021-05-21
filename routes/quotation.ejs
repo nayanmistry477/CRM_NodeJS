@@ -1,0 +1,116 @@
+<html>
+
+<body style="padding: 3%;">
+  <table style="width: 100%;font-size:10px;padding: 1%;">
+    <tr style="width: 100%;">
+      <td style="text-align: left;">
+        <img style="width:30% !important"
+          src="https://i2.wp.com/www.bmtechservices.co.uk/wp-content/uploads/2020/08/B-M-Tech-Services-final-file_400.png">
+        <p style="margin-left: 4%;">Company Registration No 12913876</p>
+      </td>
+      <td style="text-align: right;line-height: 1.5;">
+        22 Wellington St
+        <br>
+        Millo, Cumbria
+        <br>
+        LA184DE
+        <br>
+        01229 774591
+      </td>
+    </tr>
+  </table>
+  <hr>
+  <table style="width: 100%;font-size:10px;padding: 1%;line-height: 2;">
+    <tr>
+      <td style="width: 70%;">
+        <b>Quote  #</b><%= data.quoteID %> 
+        <br>
+       <b>Date</b> <%= data.quoteDate %> 
+      </td>
+      <td>
+        <b>Quote  To:</b>   
+        <%= data.invoiceTo %>
+      </td>
+    </tr>
+  </table>
+  <!-- <hr> -->
+ 
+  <hr>
+ 
+  <table style="width: 100%;font-size:10px;padding: 1%;line-height: 2;">
+    <tr>
+      <tabel style="width:100%;margin-bottom:1rem;color:#212529">
+    <tr>
+      <th style="padding:.75rem;vertical-align:top;border-top:1px solid #dee2e6;border-bottom:1px solid #dee2e6">
+        Description</th>
+      <th style="padding:.75rem;vertical-align:top;border-top:1px solid #dee2e6;border-bottom:1px solid #dee2e6">
+        Quantity</th>
+      <th style="padding:.75rem;vertical-align:top;border-top:1px solid #dee2e6;border-bottom:1px solid #dee2e6">Unit
+        Price</th>
+     
+      <th style="padding:.75rem;vertical-align:top;border-top:1px solid #dee2e6;border-bottom:1px solid #dee2e6">Item
+        Total</th>
+    </tr>
+    <tr style="text-align: center;">
+      <% if (data.items.length > 0) { %>
+        <% data.items.forEach(item => {%>
+      <tr style="text-align: center;">
+        <td style="padding:.75rem;vertical-align:top;float: left !important;"><%= item.name %></td>
+        <td style="padding:.75rem;vertical-align:top;"><%= item.quantity %></td>
+        <td style="padding:.75rem;vertical-align:top;">
+       
+
+          <% if(item.unitPrice !="" && item.unitPrice !=undefined ){ %>
+            £<%= item.unitPrice %>
+          <% } else{ %>  
+            £<%= item.price %>
+         <% } %>
+
+
+          </td>
+        <td style="padding:.75rem;vertical-align:top;">£<%= item.price %></td>
+      </tr>
+
+      <%  });%>
+      <% }%>
+      
+      <% if (data.items1.length > 0) { %>
+        <% data.items1.forEach(item1 => {%>
+      <tr style="text-align: center;">
+        <td style="padding:.75rem;vertical-align:top;float: left !important;"><%= item1.name %></td>
+        <td style="padding:.75rem;vertical-align:top;"><%= item1.quantity %></td>
+        <td style="padding:.75rem;vertical-align:top;">  
+
+          <% if(item1.unitPrice !="" && item1.unitPrice !=undefined ){ %>
+            £<%= item1.unitPrice %>
+          <% } else{ %>  
+            £<%= item1.price %>
+         <% } %>
+
+        </td>
+        <td style="padding:.75rem;vertical-align:top;">£<%= item1.price %></td>
+      </tr>
+
+      <%  });%>
+      <% }%>
+     
+      <!-- <td style="padding:.75rem;vertical-align:top;"></td>
+      <td style="padding:.75rem;vertical-align:top;">£90.00</td> -->
+    </tr>
+    </tabel>
+    </tr>
+  </table>
+  <table style="width: 96%;font-size:10px;padding: 1%;line-height: 2;">
+    <tr>
+      <td style="width: 72% !important;">
+        
+      </td>
+      <td style="float: left !important;">
+         <b>Sub Total &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: &nbsp;£<%= data.subTotal %></b>
+      </td>
+    </tr>
+  </table>
+ 
+</body>
+
+</html>
