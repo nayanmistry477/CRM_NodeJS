@@ -67,7 +67,24 @@ exports.createStatus = function (status, cb) {
       );
     });
   };
-  
+  exports.getAllStatus = function (cb) {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        console.log('Error: ' + err.message);
+        return cb(err, null);
+      }
+      return connection.query(
+        "SELECT * from `jobstatus_master`",
+        (err, results, fields) => {
+          connection.release();
+          if (err) {
+            console.log("Error: " + err.message);
+          }
+          cb(err, results)
+        }
+      );
+    });
+  };
   exports.isStatusExists = function (status, cb) {
     pool.getConnection((err, connection) => {
       if (err) {
@@ -88,24 +105,7 @@ exports.createStatus = function (status, cb) {
     });
   }; 
 
- exports.getAllStatus = function (cb) {
-    pool.getConnection((err, connection) => {
-      if (err) {
-        console.log('Error: ' + err.message);
-        return cb(err, null);
-      }
-      return connection.query(
-        "SELECT * from `jobstatus_master`",
-        (err, results, fields) => {
-          connection.release();
-          if (err) {
-            console.log("Error: " + err.message);
-          }
-          cb(err, results)
-        }
-      );
-    });
-  };
+
 // -------------------------------------------------
 var rollBack = function (err, connection, cb) {
     if (connection === null) {

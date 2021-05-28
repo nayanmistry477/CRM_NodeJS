@@ -24,6 +24,9 @@ exports.createQuotation = function (quote, cb) {
             if (err) {
               return rollBack(err, connection, cb); 
             }
+            quote.quoteID = ID
+            quote.quotationDate = date
+            quote.id = results.insertId
             cb(err, quote)
           }
         ); 

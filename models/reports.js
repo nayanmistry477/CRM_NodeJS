@@ -1174,6 +1174,72 @@ exports.getAllStocksByDate = function (data, cb) {
       // }
     });
   };
+
+  exports.getJobStatusReportByStatus = function (value,cb) {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        console.log('Error: ' + err.message);
+        return cb(err, null);
+      } 
+      var val;
+      if (value.label== "" ) { 
+        val = "SELECT job.id AS JobID,job.customer,job.jobStatus AS jobStatus,job.price,job.createdDate,invoice.paymentStatus as InvoiceStatus, \
+        (job.price - job.discount - job.deposit) as pendingPrice \
+        FROM job_master job,invoice_transaction invoice where  job.jobStatus='pending' GROUP BY job.id"
+       }else{
+         val = "SELECT job.id AS JobID,job.customer,job.jobStatus AS jobStatus,job.price,job.createdDate,invoice.paymentStatus as InvoiceStatus, \
+         (job.price - job.discount - job.deposit) as pendingPrice \
+         FROM job_master job,invoice_transaction invoice where   job.jobStatus='"+value.label+"' GROUP BY job.id"
+       }
+      return connection.query(
+        // "SELECT * from `job_master` WHERE assignedTo = ?",[tech],
+        val,
+        (err, results, fields) => {
+          // connection.release();
+          if (err) {
+            console.log("Error: " + err.message);
+          }
+            connection.query(
+              "SELECT id,jobID, name, price,unitPrice,quantity FROM sales_product_service ",
+              (err, items, fields) => {
+                // connection.release(); 
+                if (err) {
+                  console.log("Error: " + err.message);
+                  cb(err, null)
+                }
+                results.forEach(element => {
+                  var sub = items.filter(x => JSON.parse(x.jobID) === element.JobID);
+                  element.Invoiceitems = sub ? sub : [];
+                });
+                connection.query(
+                  "SELECT id,jobID, name,sellPrice as price,unitPrice,quantity FROM manual_product_transaction ",
+                  (err, items1, fields) => {
+                    connection.release(); 
+                    if (err) {
+                      console.log("Error: " + err.message);
+                      cb(err, null)
+                    }
+                    results.forEach(element => {
+                      var sub = items1.filter(x => JSON.parse(x.jobID) === element.JobID);
+                      
+                      for(var i=0;i<sub.length;i++){
+                        element.Invoiceitems.push(sub[i])
+                      }
+                    });
+                   
+                    // cb(err, services);
+                    cb(err, results)
+                  }
+                );
+                // cb(err, services);
+                // cb(err, results)
+              }
+            );
+          
+        }
+      );
+    });
+ };
 // -------------------------------------------------
 var rollBack = function (err, connection, cb) {
     if (connection === null) {

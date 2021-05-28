@@ -26,6 +26,9 @@ exports.createInvoice = function (invoice, cb) {
               return rollBack(err, connection, cb); 
             }
             invoice.invoiceID = ID;
+            invoice.invoiceDate = date;
+            invoice.dueDate = date;
+            invoice.id = results.insertId
             cb(err, invoice)
           }
         ); 

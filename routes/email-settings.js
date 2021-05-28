@@ -10,6 +10,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var EmailSettings = require('../models/email-settings');
 var generator = require('generate-password');
 const nodemailer = require('nodemailer');
+// var smtpTransport = require('nodemailer-smtp-transport');
 var fs = require("fs");
 let ejs = require("ejs");
 let path = require("path");
@@ -302,7 +303,7 @@ router.post('/sendMail',
             if (!a.isEmpty(user) && !err) {
 
                 var data = req.body
-                data.invoiceDate = moment(data.invoiceDate).format('MMMM-DD-YYYY')
+                data.invoiceDate = moment(data.invoiceDate).format('DD-MMMM-YYYY')
                 // console.log("Invoice Data",data)
                 const filePathName = path.resolve(__dirname, "invoice-email.ejs");
                 const htmlString = fs.readFileSync(filePathName).toString();
@@ -310,13 +311,33 @@ router.post('/sendMail',
                 const ejsData = ejs.render(htmlString, { data: data });
 
 
+                // var transporter = nodemailer.createTransport({
+                //     service: 'gmail',
+                //     auth: {
+                //         user: data.username,
+                //         pass: data.password,
+                //     }
+                // });
+                var ssl = false;
+                if(data.isSSL == ""){
+                    ssl = false
+                }else{
+                    ssl = true
+                }
                 var transporter = nodemailer.createTransport({
-                    service: 'gmail',
+                    host: data.host,
+                    port: Number(data.port), 
                     auth: {
                         user: data.username,
                         pass: data.password,
+                    },
+                    tls: {
+                        secure: true,
+                        ignoreTLS: true,
+                        rejectUnauthorized: false
                     }
                 });
+
                 var mailOptions = {
                     from: data.username,
                     to: data.email,
@@ -328,6 +349,10 @@ router.post('/sendMail',
                 transporter.sendMail(mailOptions, function (error, info) {
                     if (error) {
                         console.log(error);
+                        return res.json({
+                            message: "Mail send failed",
+                            status: 0
+                        });
                     } else {
                         return res.json({
                             message: "Mail has been sent",
@@ -362,32 +387,64 @@ router.post('/sendQuoteMail',
             if (!a.isEmpty(user) && !err) {
 
                 var data = req.body
-                data.quotationDate = moment(data.quotationDate).format('MMMM-DD-YYYY')
+                data.quotationDate = moment(data.quotationDate).format('DD-MMMM-YYYY')
                 // console.log("Invoice Data",data)
                 const filePathName = path.resolve(__dirname, "quote-email.ejs");
                 const htmlString = fs.readFileSync(filePathName).toString();
                 //  ejs.render(htmlString, data);
-                const ejsData = ejs.render(htmlString, { data: data });
+                const ejsData = ejs.render(htmlString, { data: data }); 
 
-
-                var transporter = nodemailer.createTransport({
-                    service: 'gmail',
+                // var transporter = nodemailer.createTransport({
+                //     service: 'gmail',
+                //     auth: {
+                //         user: data.username,
+                //         pass: data.password,
+                //     }
+                // });
+                // var ssl = false;
+                // if(data.isSSL == ""){
+                //     ssl = false
+                // }else{
+                //     ssl = true
+                // }
+                var transporter = nodemailer.createTransport({ 
+                    host: data.host,
+                    port: Number(data.port), 
                     auth: {
                         user: data.username,
                         pass: data.password,
+                    },
+                    tls: {
+                        secure: true,
+                        ignoreTLS: true,
+                        rejectUnauthorized: false
                     }
+                    // host: 'mail.whamos.co.uk',
+                    // port: 587, 
+                    // auth: {
+                    //     user:'neal@whamos.co.uk',
+                    //     pass:'jamala187!',
+                    // },
+                    // tls: {
+                    //     secure: true,
+                    //     ignoreTLS: true,
+                    //     rejectUnauthorized: false
+                    // }
                 });
                 var mailOptions = {
                     from: data.username,
-                    to: data.email,
+                    to: 'nayanmistry477@gmail.com',
                     subject: "Quotation",
                     html: ejsData,
                 };
-
-
+ 
                 transporter.sendMail(mailOptions, function (error, info) {
                     if (error) {
                         console.log(error);
+                        return res.json({
+                            message: "Mail send failed",
+                            status: 0
+                        });
                     } else {
                         return res.json({
                             message: "Mail has been sent",

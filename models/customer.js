@@ -68,7 +68,24 @@ exports.createCustomer = function (customer, cb) {
       );
     });
   };
-  
+  exports.getAllCustomers = function (cb) {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        console.log('Error: ' + err.message);
+        return cb(err, null);
+      }
+      return connection.query(
+        "SELECT * from `customer_master` ",
+        (err, results, fields) => {
+          connection.release();
+          if (err) {
+            console.log("Error: " + err.message);
+          }
+         cb(err, results)
+        }
+      );
+    });
+  };
   exports.doesEmailExist = function (email, cb) {
     pool.getConnection((err, connection) => {
       if (err) {
@@ -110,24 +127,7 @@ exports.createCustomer = function (customer, cb) {
     });
   };
 
-  exports.getAllCustomers = function (cb) {
-    pool.getConnection((err, connection) => {
-      if (err) {
-        console.log('Error: ' + err.message);
-        return cb(err, null);
-      }
-      return connection.query(
-        "SELECT * from `customer_master` ",
-        (err, results, fields) => {
-          connection.release();
-          if (err) {
-            console.log("Error: " + err.message);
-          }
-         return cb(err, results)
-        }
-      );
-    });
-  };
+
 // -------------------------------------------------
 var rollBack = function (err, connection, cb) {
     if (connection === null) {

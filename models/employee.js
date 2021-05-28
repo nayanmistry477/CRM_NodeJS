@@ -309,7 +309,7 @@ exports.findEmail = function (email, cb) {
     });
   };
 
-  exports.updateEmployee  = function (section, cb) {
+  exports.updateEmployee = function (section, cb) {
     pool.getConnection((err, connection) => {
       if (err) {
         return cb(err, null);
