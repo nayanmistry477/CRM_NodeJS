@@ -80,7 +80,7 @@ app.use(auth.initialize());
 
 app.use(logger('dev'));
 //Auth
-var employee = require('./routes/employee');
+var user = require('./routes/user');
 var customer = require('./routes/customer');
 var product = require('./routes/product');
 var productPurchase = require('./routes/product-purchase');
@@ -98,12 +98,12 @@ var emailSettings = require('./routes/email-settings');
 var invoice = require('./routes/invoice');
 var quote = require('./routes/quotation');
 
-var desclaimerr = require('./routes/desclaimer');
+var desclaimerr = require('./routes/disclaimer');
 var technician = require('./routes/technicians');
 var reports = require('./routes/reports');
 var payment = require('./routes/payment');
 
-app.use('/user', employee); 
+app.use('/user', user); 
 app.use('/customer', customer); 
 app.use('/product', product); 
 app.use('/productPurchase', productPurchase); 
@@ -121,7 +121,7 @@ app.use('/email-settings', emailSettings);
 app.use('/invoice', invoice); 
 app.use('/quotation', quote); 
 
-app.use('/desclaimer', desclaimerr); 
+app.use('/disclaimer', desclaimerr); 
 app.use('/technicians', technician); 
 app.use('/reports', reports); 
 app.use('/payment', payment); 

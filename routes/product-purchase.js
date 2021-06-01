@@ -83,8 +83,7 @@ router.post('/createProductPurchase',
             
         })(req, res, next);
     },
-);
-
+); 
 
 router.post('/updateProductPurchase',
     (req, res, next) => {
@@ -190,9 +189,7 @@ router.post('/deleteProductPurchase',
            
         })(req, res, next);
     },
-);
-
-
+); 
 
 router.post('/getAllPurchaseCount',
 function (req, res, next) {
@@ -289,8 +286,7 @@ function (req, res, next) {
   })(req, res, next);
 }
 );
-
-
+ 
 router.get('/getAllMinimumStocks',
 function (req, res, next) {
 
@@ -337,9 +333,7 @@ function (req, res, next) {
   })(req, res, next);
 }
 );
-
-
-
+ 
 router.get('/getAllChartCounts',
 function (req, res, next) {
 

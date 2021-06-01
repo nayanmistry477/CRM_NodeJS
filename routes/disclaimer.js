@@ -7,7 +7,7 @@ var multer = require('multer');
 var auth = require('../helpers/auth/jwt');
 var guid = require('aguid');
 var LocalStrategy = require('passport-local').Strategy;
-var Desclaimer = require('../models/desclaimer');
+var Disclaimer = require('../models/disclaimer');
 var generator = require('generate-password');
 const nodemailer = require('nodemailer');
 
@@ -18,7 +18,7 @@ const { NotFound, BadRequest, InternalServer, UnauthorizedAccess, StateConflict 
 var secret = 'xyz';
 
 
-router.post('/createDesclaimer',
+router.post('/createDisclaimer',
     (req, res, next) => {
 
         const errors = req.validationErrors();
@@ -40,7 +40,7 @@ router.post('/createDesclaimer',
                     modifiedDate: new Date(), 
 
                 };
-                Desclaimer.createDesclaimer(data,
+                Disclaimer.creatDisclaimer(data,
                     function (err, result1) {
                         if (err) {
                             //Database connection error
@@ -81,7 +81,7 @@ router.post('/createDesclaimer',
 ); 
 
 
-router.get('/getDesclaimer',
+router.get('/getDisclaimer',
 function (req, res, next) {
 
   passport.authenticate('jwt', { session: false }, function (err, user) {
@@ -89,7 +89,7 @@ function (req, res, next) {
     if (!a.isEmpty(user) && !err) {
 
     //   var user_id = req.body;
-    Desclaimer.getDesclaimer(function (err, result) {
+    Disclaimer.getDisclaimer(function (err, result) {
         if (err) {
           return next(new InternalServer(ErrCode.DB_CONNECTION_ERROR, undefined, err.message));
         }

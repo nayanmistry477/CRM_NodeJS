@@ -106,9 +106,7 @@ router.post('/createCategory',
             
         })(req, res, next);
     },
-);
-
-
+); 
 router.post('/updateCategory',
     (req, res, next) => {
 

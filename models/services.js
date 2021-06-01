@@ -7,8 +7,31 @@ const { EnvironmentObj } = require('../configs');
 const { environmentObj } = require('../configs/environmentVariables');
 const Moment = require('moment');
 
-exports.createService = function (service, cb) {
+// exports.createService = function (service, cb) {
 
+//   var num = Math.floor(Math.random() * 9000) + 1000;
+//   var ID = new Date().getFullYear() + num;
+//   pool.getConnection((err, connection) => {
+//     if (err) {
+//       console.log('Error: ' + err.message);
+//       return cb(err, null);
+//     }
+//     return connection.query(
+//       'INSERT INTO `service_master` (`serviceID`,`serviceName`,`price`,`createdDate`,`isActive`) VALUES (?,?,?,?,?)',
+//       [ID, service.serviceName, service.price, service.createdDate, service.isActive],
+//       (err, services, fields) => {
+//           connection.release();
+//         if (err) {
+//           console.log("Error: " + err.message);
+//           return cb(err, null)
+//         }
+//         cb(err, services);
+
+//       }
+//     );
+//   });
+// };
+exports.createService = function (service, cb) {
   var num = Math.floor(Math.random() * 9000) + 1000;
   var ID = new Date().getFullYear() + num;
   pool.getConnection((err, connection) => {
@@ -25,7 +48,11 @@ exports.createService = function (service, cb) {
           console.log("Error: " + err.message);
           return cb(err, null)
         }
-        cb(err, services);
+        var obj = service
+        obj.serviceID = ID;
+        obj.id = services.insertId
+
+        return cb(err, obj);
 
       }
     );
@@ -80,33 +107,7 @@ exports.isServiceExists = function (name, cb) {
 //   });
 // };
 
-exports.createOnlyService = function (service, cb) {
-  var num = Math.floor(Math.random() * 9000) + 1000;
-  var ID = new Date().getFullYear() + num;
-  pool.getConnection((err, connection) => {
-    if (err) {
-      console.log('Error: ' + err.message);
-      return cb(err, null);
-    }
-    return connection.query(
-      'INSERT INTO `service_master` (`serviceID`,`serviceName`,`price`,`createdDate`,`isActive`) VALUES (?,?,?,?,?)',
-      [ID, service.serviceName, service.price, service.createdDate, service.isActive],
-      (err, services, fields) => {
-          connection.release();
-        if (err) {
-          console.log("Error: " + err.message);
-          return cb(err, null)
-        }
-        var obj = service
-        obj.serviceID = ID;
-        obj.id = services.insertId
 
-        return cb(err, obj);
-
-      }
-    );
-  });
-};
 
 // exports.updateService = function (service, products, cb) {
 //   var sID;
@@ -504,118 +505,7 @@ exports.updateProduct_ServiceFinal = function (service, cb) {
   });
 };
 
-exports.updateProduct_ServiceFinalInvoice = function (service, cb) {
-  pool.getConnection((err, connection) => {
-    if (err) {
-      console.log('Error: ' + err.message);
-      return cb(err, null);
-    }
-    var responseVal = false
-    for (var i = 0; i < service.length; i++) {
-      var date = new Date()
-      var status = 'true';
 
-
-      if (service[i].productID != null) {
-        if (service[i].ID == undefined) {
-
-
-          connection.query('INSERT INTO `sales_product_service` (`productID`,`jobID`,`invoiceID`,`name`,`price`,`quantity`,`createdDate`,`isActive`) VALUES (?,?,?,?,?,?,?,?)',
-            [service[i].productID, service[i].jobID, service[i].invoiceID, service[i].name, service[i].price, service[i].quantity, date, status],
-            (err, product_list, fields) => {
-                // connection.release();
-                 
-              if (err) {
-                console.log("Error: " + err.message);
-                return cb(err, null)
-              }
-              responseVal = true
-            }
-          );
-
-
-        } else {
-          connection.query(
-
-            // 'INSERT INTO `sales_product_service` (`productID`,`jobID`,`name`,`price`,`quantity`,`createdDate`,`isActive`) VALUES (?,?,?,?,?,?,?)',
-            // [service[i].productID, service[i].jobID, service[i].name, service[i].price, service[i].quantity, date, status],
-
-            'UPDATE `sales_product_service` SET  price = ?,quantity = ?, modifiedDate=now()  WHERE  id = ? and invoiceID = ?',
-            [service[i].price, service[i].quantity, service[i].ID, service[i].invoiceID],
-            (err, product_list, fields) => {
-                // connection.release();
-                
-              if (err) {
-                console.log("Error: " + err.message);
-                return cb(err, null)
-              }
-              responseVal = true
-              //   services.forEach(element => {
-              //     var sub = sub_services.filter(x => x.product_id === element.product_id);
-              //     element.images = sub ? sub : [];
-              //   });
-
-            }
-          );
-        }
-      } else {
-
-        if (service[i].ID == undefined) {
-
-          var proid = null
-          connection.query('INSERT INTO `sales_product_service` ( `serviceID`,`jobID`,`invoiceID`,`name`,`price`,`quantity`,`createdDate`,`isActive`) VALUES (?,?,?,?,?,?,?,?)',
-            [service[i].serviceID, service[i].jobID, service[i].invoiceID, service[i].name, service[i].price, service[i].quantity, date, status],
-            (err, product_list, fields) => {
-                // connection.release();
-                 
-              if (err) {
-                console.log("Error: " + err.message);
-                return cb(err, null)
-              }
-              responseVal = true
-              //   services.forEach(element => {
-              //     var sub = sub_services.filter(x => x.product_id === element.product_id);
-              //     element.images = sub ? sub : [];
-              //   });
-
-            }
-          );
-
-
-        } else {
-          connection.query(
-
-            // 'INSERT INTO `sales_product_service` (`productID`,`jobID`,`name`,`price`,`quantity`,`createdDate`,`isActive`) VALUES (?,?,?,?,?,?,?)',
-            // [service[i].productID, service[i].jobID, service[i].name, service[i].price, service[i].quantity, date, status],
-
-            'UPDATE `sales_product_service` SET   price = ?,quantity = ?,  modifiedDate=now()  WHERE  id = ? and invoiceID = ?',
-            [service[i].price, service[i].quantity, service[i].ID, service[i].invoiceID],
-            (err, product_list, fields) => {
-                // connection.release();
-                
-              if (err) {
-                console.log("Error: " + err.message);
-                return cb(err, null)
-              }
-              responseVal = true
-              //   services.forEach(element => {
-              //     var sub = sub_services.filter(x => x.product_id === element.product_id);
-              //     element.images = sub ? sub : [];
-              //   });
-
-            }
-          );
-        }
-      }
-    }
-    if(responseVal == true){
-      connection.release();
-    }else{
-      connection.release();
-    }
-    return cb(err, service);
-  });
-};
 
 
 // exports.updateSalesService = function (section, cb) {
@@ -690,8 +580,8 @@ exports.createJobFinal = function (service, cb) {
     var num = Math.floor(Math.random() * 9000) + 1000;
     var ID = 'BMTS' + new Date().getFullYear() + num;
     return connection.query(
-      'INSERT INTO `job_master` (`jobId`,`customerID`,`customer`,`customerContact`,`customerEmail`,`address`,`postCode`,`brand`,`accompanying`,`damageAsses`,`itemType`,`serialNo`,`password`,`itemComment`,`underWarranty`,`bookedBy`,`storageLocation`, `jobStatus`,`statusStage`,`estDate`,`repairDescription`,`additionalNotes`,`technicianNotes`,`deposit`,`price`,`createdDate`,`isActive`) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-      [ID, service.customerID, service.customer, service.customerContact, service.customerEmail, service.address, service.postCode, service.brand, service.accompanying, service.damageAsses, service.itemType, service.serialNo, service.password, service.itemComment, service.underWarranty, service.bookedBy, service.storageLocation,   service.jobStatus, service.statusStage, service.estDate, service.repairDescription, service.additionalNotes, service.technicianNotes, service.deposit, service.price, service.createdDate, service.isActive],
+      'INSERT INTO `job_master` (`jobId`,`customerID`,`customer`,`customerContact`,`customerEmail`,`address`,`postCode`,`brand`,`accompanying`,`damageAsses`,`itemType`,`serialNo`,`modelNo`,`password`,`itemComment`,`underWarranty`,`bookedBy`,`storageLocation`, `jobStatus`,`statusStage`,`estDate`,`repairDescription`,`additionalNotes`,`technicianNotes`,`deposit`,`price`,`createdDate`,`isActive`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+      [ID, service.customerID, service.customer, service.customerContact, service.customerEmail, service.address, service.postCode, service.brand, service.accompanying, service.damageAsses, service.itemType, service.serialNo,service.modelNo, service.password, service.itemComment, service.underWarranty, service.bookedBy, service.storageLocation,   service.jobStatus, service.statusStage, service.estDate, service.repairDescription, service.additionalNotes, service.technicianNotes, service.deposit, service.price, service.createdDate, service.isActive],
       (err, services, fields) => {
           connection.release();
         if (err) {
@@ -705,32 +595,32 @@ exports.createJobFinal = function (service, cb) {
   });
 };
 
-exports.updateJobStatus = function (section, cb) {
+// exports.updateJobStatus = function (section, cb) {
+//   pool.getConnection((err, connection) => {
+//     if (err) {
+//       return cb(err, null);
+//     }
+//     return connection.query(
+//       'UPDATE `job_master` SET jobStatus = ?,modifiedDate=now()  WHERE  id = ?',
+//       [section.jobStatus, section.id], 
+//       (err2, results, fields) => {
+//         connection.release();
+//         if (err2) {
+//           return cb(err2, null);
+//         }
+//         return cb(null, results);
+//       },
+//     );
+//   });
+// };
+exports.updateJobService = function (section, cb) {
   pool.getConnection((err, connection) => {
     if (err) {
       return cb(err, null);
     }
     return connection.query(
-      'UPDATE `job_master` SET jobStatus = ?,modifiedDate=now()  WHERE  id = ?',
-      [section.jobStatus, section.id], 
-      (err2, results, fields) => {
-        connection.release();
-        if (err2) {
-          return cb(err2, null);
-        }
-        return cb(null, results);
-      },
-    );
-  });
-};
-exports.updateJobData = function (section, cb) {
-  pool.getConnection((err, connection) => {
-    if (err) {
-      return cb(err, null);
-    }
-    return connection.query(
-      'UPDATE `job_master` SET customer = ?,  customerContact = ?,customerEmail = ?,address = ?, itemType = ?, brand = ?, damageAsses = ?,underWarranty = ?,	serialNo = ?,accompanying = ?,itemComment = ?,password = ?,price = ?,deposit = ?,discount = ?,bookedBy = ?,assignedTo = ?,storageLocation = ?, jobStatus = ?,statusStage = ?,repairDescription = ?,additionalNotes = ?,technicianNotes = ?,estDate = ?,	completedDate = ?, modifiedDate=now()  WHERE  id = ?',
-      [section.customer, section.customerContact, section.customerEmail, section.address, section.itemType, section.brand, section.damageAsses, section.underWarranty, section.serialNo, section.accompanying, section.itemComment, section.password, section.price, section.deposit, section.discount, section.bookedBy, section.assignedTo, section.storageLocation,  section.jobStatus, section.statusStage, section.repairDescription, section.additionalNotes, section.technicianNotes, section.estDate, section.completedDate, section.id],
+      'UPDATE `job_master` SET customer = ?,  customerContact = ?,customerEmail = ?,address = ?, itemType = ?, brand = ?, damageAsses = ?,underWarranty = ?,	serialNo = ?,modelNo = ?,accompanying = ?,itemComment = ?,password = ?,price = ?,deposit = ?,discount = ?,bookedBy = ?,assignedTo = ?,storageLocation = ?, jobStatus = ?,statusStage = ?,repairDescription = ?,additionalNotes = ?,technicianNotes = ?,estDate = ?,	completedDate = ?, modifiedDate=now()  WHERE  id = ?',
+      [section.customer, section.customerContact, section.customerEmail, section.address, section.itemType, section.brand, section.damageAsses, section.underWarranty, section.serialNo,section.modelNo, section.accompanying, section.itemComment, section.password, section.price, section.deposit, section.discount, section.bookedBy, section.assignedTo, section.storageLocation,  section.jobStatus, section.statusStage, section.repairDescription, section.additionalNotes, section.technicianNotes, section.estDate, section.completedDate, section.id],
 
       (err2, results, fields) => {
         connection.release();
@@ -742,25 +632,7 @@ exports.updateJobData = function (section, cb) {
     );
   });
 };
-exports.updateJobDelete = function (section, cb) {
-  pool.getConnection((err, connection) => {
-    if (err) {
-      return cb(err, null);
-    }
-    return connection.query(
-      'UPDATE `job_master` SET deposit = ?,discount = ?, modifiedDate=now()  WHERE  id = ?',
-      [section.deposit, section.discount, section.id],
-
-      (err2, results, fields) => {
-        connection.release();
-        if (err2) {
-          return cb(err2, null);
-        }
-        return cb(null, section);
-      },
-    );
-  });
-};
+ 
 
 
 exports.getJobByJobId = function (section, cb) {
@@ -895,23 +767,7 @@ exports.getProducts_ServiceByjobID = async function (data, cb) {
   });
 };
 
-exports.getProducts_ServiceByinvoiceID = async function (data, cb) {
-  pool.getConnection((err, connection) => {
-    if (err) {
-      console.log('Error: ' + err.message);
-      return cb(err, null);
-    }
-    return connection.query("SELECT * from `sales_product_service` WHERE invoiceID = ? ", [data.invoiceID],
-      (err, results, fields) => {
-        connection.release();
-        if (err) {
-          console.log("Error: " + err.message);
-        }
-        return cb(err, results)
-      }
-    );
-  });
-};
+
 
 exports.getServiceByServiceID = function (section, cb) {
   pool.getConnection((err, connection) => {
@@ -989,25 +845,25 @@ exports.getjobsByUserId = function (data, cb) {
   });
 };
 
-exports.getChecklistByItemType = function (name, cb) {
-  pool.getConnection((err, connection) => {
-    if (err) {
-      console.log('Error: ' + err.message);
-      return cb(err, null);
-    }
-    return connection.query(
-      'SELECT * FROM `service_master` where `serviceName` = ?', [name],
-      (err, results, fields) => {
-        connection.release();
-        if (err) {
-          console.log("Error: " + err.message);
-          cb(err, null)
-        }
-        cb(null, results)
-      }
-    );
-  });
-};
+// exports.getChecklistByItemType = function (name, cb) {
+//   pool.getConnection((err, connection) => {
+//     if (err) {
+//       console.log('Error: ' + err.message);
+//       return cb(err, null);
+//     }
+//     return connection.query(
+//       'SELECT * FROM `service_master` where `serviceName` = ?', [name],
+//       (err, results, fields) => {
+//         connection.release();
+//         if (err) {
+//           console.log("Error: " + err.message);
+//           cb(err, null)
+//         }
+//         cb(null, results)
+//       }
+//     );
+//   });
+// };
 
 
 // -------------------------------------------------

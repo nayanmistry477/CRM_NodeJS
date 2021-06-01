@@ -180,7 +180,136 @@ exports.createInvoice = function (invoice, cb) {
     });
   };
 
- 
+  exports.updateProduct_ServiceFinalInvoice = function (service, cb) {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        console.log('Error: ' + err.message);
+        return cb(err, null);
+      }
+      var responseVal = false
+      for (var i = 0; i < service.length; i++) {
+        var date = new Date()
+        var status = 'true';
+  
+  
+        if (service[i].productID != null) {
+          if (service[i].ID == undefined) {
+  
+  
+            connection.query('INSERT INTO `sales_product_service` (`productID`,`jobID`,`invoiceID`,`name`,`price`,`quantity`,`createdDate`,`isActive`) VALUES (?,?,?,?,?,?,?,?)',
+              [service[i].productID, service[i].jobID, service[i].invoiceID, service[i].name, service[i].price, service[i].quantity, date, status],
+              (err, product_list, fields) => {
+                  // connection.release();
+                   
+                if (err) {
+                  console.log("Error: " + err.message);
+                  return cb(err, null)
+                }
+                responseVal = true
+              }
+            );
+  
+  
+          } else {
+            connection.query(
+  
+              // 'INSERT INTO `sales_product_service` (`productID`,`jobID`,`name`,`price`,`quantity`,`createdDate`,`isActive`) VALUES (?,?,?,?,?,?,?)',
+              // [service[i].productID, service[i].jobID, service[i].name, service[i].price, service[i].quantity, date, status],
+  
+              'UPDATE `sales_product_service` SET  price = ?,quantity = ?, modifiedDate=now()  WHERE  id = ? and invoiceID = ?',
+              [service[i].price, service[i].quantity, service[i].ID, service[i].invoiceID],
+              (err, product_list, fields) => {
+                  // connection.release();
+                  
+                if (err) {
+                  console.log("Error: " + err.message);
+                  return cb(err, null)
+                }
+                responseVal = true
+                //   services.forEach(element => {
+                //     var sub = sub_services.filter(x => x.product_id === element.product_id);
+                //     element.images = sub ? sub : [];
+                //   });
+  
+              }
+            );
+          }
+        } else {
+  
+          if (service[i].ID == undefined) {
+  
+            var proid = null
+            connection.query('INSERT INTO `sales_product_service` ( `serviceID`,`jobID`,`invoiceID`,`name`,`price`,`quantity`,`createdDate`,`isActive`) VALUES (?,?,?,?,?,?,?,?)',
+              [service[i].serviceID, service[i].jobID, service[i].invoiceID, service[i].name, service[i].price, service[i].quantity, date, status],
+              (err, product_list, fields) => {
+                  // connection.release();
+                   
+                if (err) {
+                  console.log("Error: " + err.message);
+                  return cb(err, null)
+                }
+                responseVal = true
+                //   services.forEach(element => {
+                //     var sub = sub_services.filter(x => x.product_id === element.product_id);
+                //     element.images = sub ? sub : [];
+                //   });
+  
+              }
+            );
+  
+  
+          } else {
+            connection.query(
+  
+              // 'INSERT INTO `sales_product_service` (`productID`,`jobID`,`name`,`price`,`quantity`,`createdDate`,`isActive`) VALUES (?,?,?,?,?,?,?)',
+              // [service[i].productID, service[i].jobID, service[i].name, service[i].price, service[i].quantity, date, status],
+  
+              'UPDATE `sales_product_service` SET   price = ?,quantity = ?,  modifiedDate=now()  WHERE  id = ? and invoiceID = ?',
+              [service[i].price, service[i].quantity, service[i].ID, service[i].invoiceID],
+              (err, product_list, fields) => {
+                  // connection.release();
+                  
+                if (err) {
+                  console.log("Error: " + err.message);
+                  return cb(err, null)
+                }
+                responseVal = true
+                //   services.forEach(element => {
+                //     var sub = sub_services.filter(x => x.product_id === element.product_id);
+                //     element.images = sub ? sub : [];
+                //   });
+  
+              }
+            );
+          }
+        }
+      }
+      if(responseVal == true){
+        connection.release();
+      }else{
+        connection.release();
+      }
+      return cb(err, service);
+    });
+  };
+
+  exports.getProducts_ServiceByinvoiceID = async function (data, cb) {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        console.log('Error: ' + err.message);
+        return cb(err, null);
+      }
+      return connection.query("SELECT * from `sales_product_service` WHERE invoiceID = ? ", [data.invoiceID],
+        (err, results, fields) => {
+          connection.release();
+          if (err) {
+            console.log("Error: " + err.message);
+          }
+          return cb(err, results)
+        }
+      );
+    });
+  };
   exports.getInvoiceByID = function (id,cb) {
     pool.getConnection((err, connection) => {
       if (err) {
@@ -199,7 +328,7 @@ exports.createInvoice = function (invoice, cb) {
       );
     });
   };
-    exports.getJobByInvoiceID = function (id,cb) {
+    exports.getInvoiceByjobID = function (id,cb) {
     pool.getConnection((err, connection) => {
       if (err) {
         console.log('Error: ' + err.message);

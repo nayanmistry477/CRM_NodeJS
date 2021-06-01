@@ -412,57 +412,7 @@ router.post('/deleteProductManually',
         })(req, res, next);
     },
 ); 
-router.post('/updateProductOnJob',
-    (req, res, next) => {
 
-        const errors = req.validationErrors();
-        if (errors) {
-            return next(new BadRequest(ErrCode.VALIDATION_FAILED, undefined, errors));
-        }
-        return next();
-    },
-    (req, res, next) => {
-        passport.authenticate('jwt', {
-            session: false,
-        }, (err, user) => { 
-                const nUser = req.body; 
-                Product.updateProductOnJob(nUser,
-                    function (err, result1) {
-                        if (err) {
-                            //Database connection error
-                            return res.json({
-                                success: false,
-                                data: {
-                                    status: 0,
-                                    message: err.message,
-                                    result1: []
-                                },
-                            });
-                        }
-                        if (result1 === undefined || result1 === null || result1.length == 0) {
-                            return res.json({
-                                success: true,
-                                data: {
-                                    status: 0,
-                                    message: 'Update Product Failed',
-                                    result1: {}
-                                },
-                            });
-                        }
-
-                        return res.json({
-                            success: true,
-                            data: {
-                                status: 1,
-                                message: 'Product Updated successfully.',
-                                result1
-                            },
-                        });
-                    }); 
-           
-        })(req, res, next);
-    },
-);  
 router.post('/getProductByProductID',
 function (req, res, next) {
 
@@ -739,4 +689,57 @@ function (req, res, next) {
   })(req, res, next);
 }
 );
+
+
+// router.post('/updateProductOnJob',
+//     (req, res, next) => {
+
+//         const errors = req.validationErrors();
+//         if (errors) {
+//             return next(new BadRequest(ErrCode.VALIDATION_FAILED, undefined, errors));
+//         }
+//         return next();
+//     },
+//     (req, res, next) => {
+//         passport.authenticate('jwt', {
+//             session: false,
+//         }, (err, user) => { 
+//                 const nUser = req.body; 
+//                 Product.updateProductOnJob(nUser,
+//                     function (err, result1) {
+//                         if (err) {
+//                             //Database connection error
+//                             return res.json({
+//                                 success: false,
+//                                 data: {
+//                                     status: 0,
+//                                     message: err.message,
+//                                     result1: []
+//                                 },
+//                             });
+//                         }
+//                         if (result1 === undefined || result1 === null || result1.length == 0) {
+//                             return res.json({
+//                                 success: true,
+//                                 data: {
+//                                     status: 0,
+//                                     message: 'Update Product Failed',
+//                                     result1: {}
+//                                 },
+//                             });
+//                         }
+
+//                         return res.json({
+//                             success: true,
+//                             data: {
+//                                 status: 1,
+//                                 message: 'Product Updated successfully.',
+//                                 result1
+//                             },
+//                         });
+//                     }); 
+           
+//         })(req, res, next);
+//     },
+// );  
 module.exports = router;

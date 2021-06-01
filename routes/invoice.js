@@ -157,7 +157,6 @@ router.post('/updateInvoice',
         })(req, res, next);
     },
 );
-
  
 router.post('/deleteInvoice',
     (req, res, next) => {
@@ -208,10 +207,117 @@ router.post('/deleteInvoice',
         })(req, res, next);
     },
 )
-  
- 
 
-router.post('/getJobByInvoiceID',
+router.post('/updateProduct_ServiceFinalInvoice',
+  (req, res, next) => {
+
+    const errors = req.validationErrors();
+    if (errors) {
+      return next(new BadRequest(ErrCode.VALIDATION_FAILED, undefined, errors));
+    }
+    return next();
+  },
+  (req, res, next) => {
+    passport.authenticate('jwt', {
+      session: false,
+    }, (err, user) => {
+
+      const obj = req.body;
+      // const nUser = { 
+      //     psID:obj.psID,
+      //     name: obj.name,  
+      //     quantity: obj.quantity,  
+      //     price:obj.price, 
+      // };
+
+
+      Invoice.updateProduct_ServiceFinalInvoice(obj,
+        function (err, result1) {
+          if (err) {
+            //Database connection error
+            return res.json({
+              success: false,
+              data: {
+                status: 0,
+                message: err.message,
+                result1: []
+              },
+            });
+          }
+          if (result1 === undefined || result1 === null || result1.length == 0) {
+            return res.json({
+              success: true,
+              data: {
+                status: 0,
+                message: ' Item Update Failed',
+                result1: {}
+              },
+            });
+          }
+
+          return res.json({
+            success: true,
+            data: {
+              status: 1,
+              message: ' Item Updated successfully.',
+              result1
+            },
+          });
+        });
+
+
+
+    })(req, res, next);
+  },
+);
+
+router.post('/getProducts_ServiceByinvoiceID',
+  function (req, res, next) {
+
+    passport.authenticate('jwt', { session: false }, function (err, user) {
+      // console.log("in get users", user);
+      if (!a.isEmpty(user) && !err) {
+
+        var data = req.body;
+        Invoice.getProducts_ServiceByinvoiceID(data, function (err, result) {
+          if (err) {
+            return next(new InternalServer(ErrCode.DB_CONNECTION_ERROR, undefined, err.message));
+          }
+          if (result === undefined || result === null || result.length == 0) {
+            return res.json({
+              success: true,
+
+              status: 0,
+              message: 'not init',
+              result: []
+
+            });
+          }
+          return res.json({
+            success: true,
+            status: 1,
+            result
+
+          });
+        })
+      }
+
+      else {
+        // var err = new Error('User is not logged in');
+        // return next(err);
+        return res.json({
+          success: false,
+          data: {
+            status: 0,
+            message: err.message,
+            result: []
+          },
+        });
+      }
+    })(req, res, next);
+  }
+);
+router.post('/getInvoiceByjobID',
 function (req, res, next) {
 
   passport.authenticate('jwt', { session: false }, function (err, user) {
@@ -219,7 +325,7 @@ function (req, res, next) {
     if (!a.isEmpty(user) && !err) {
 
       var id = req.body;
-    Invoice.getJobByInvoiceID(id,function (err, result) {
+    Invoice.getInvoiceByjobID(id,function (err, result) {
         if (err) {
           return next(new InternalServer(ErrCode.DB_CONNECTION_ERROR, undefined, err.message));
         }
@@ -303,8 +409,7 @@ function (req, res, next) {
     }
   })(req, res, next);
 }
-);
-
+); 
  
 router.post('/getInvoiceByID',
 function (req, res, next) {

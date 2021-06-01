@@ -8,7 +8,7 @@ const randomFixedInteger = function (length) {
   return Math.floor(Math.pow(10, length - 1) + Math.random() * (Math.pow(10, length) - Math.pow(10, length - 1) - 1));
 };
 
-exports.createTechnician = function (employee, cb) { 
+exports.createTechnician = function (technician, cb) { 
   pool.getConnection((err, connection) => {
     if (err) {
       console.log('Error: ' + err.message);
@@ -17,7 +17,7 @@ exports.createTechnician = function (employee, cb) {
       var modifiedDate = null;
       connection.query(
         'INSERT INTO `technician_master` (`firstname`,`lastname`,`email`,`contactNo`, `address`,`createdDate`,`isActive` ) VALUES (?,?,?,?,?,?,?)', 
-        [employee.firstname,employee.lastname,employee.email,employee.contactNo, employee.address,employee.createdDate,employee.isActive],
+        [technician.firstname,technician.lastname,technician.email,technician.contactNo, technician.address,technician.createdDate,technician.isActive],
         (err, results, fields) => { 
           connection.release();
           if (err) {

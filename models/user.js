@@ -8,7 +8,7 @@ const randomFixedInteger = function (length) {
   return Math.floor(Math.pow(10, length - 1) + Math.random() * (Math.pow(10, length) - Math.pow(10, length - 1) - 1));
 };
 
-exports.signUp = function (employee, cb) {
+exports.signUp = function (user, cb) {
   // user.CREATED_DATE = new Date();
   // user.STATUS = 1;
   // user.ACTIVE = 1;
@@ -25,7 +25,7 @@ exports.signUp = function (employee, cb) {
       var modifiedDate = null;
       connection.query(
         'INSERT INTO `user_master` (`firstname`,`lastname`,`jobTitle`,`email`,`contactNo`,`password`,`userRole`,`createdDate`,`isActive`,`modifiedDate`) VALUES (?,?,?,?,?,?,?,?,?,?)', 
-        [employee.firstname,employee.lastname,employee.jobTitle,employee.email,employee.contactNo,employee.password,employee.userRole,employee.createdDate,employee.isActive,modifiedDate],
+        [user.firstname,user.lastname,user.jobTitle,user.email,user.contactNo,user.password,user.userRole,user.createdDate,user.isActive,modifiedDate],
         (err, results, fields) => { 
           connection.release();
           if (err) {
@@ -309,7 +309,7 @@ exports.findEmail = function (email, cb) {
     });
   };
 
-  exports.updateEmployee = function (section, cb) {
+  exports.updateUser = function (section, cb) {
     pool.getConnection((err, connection) => {
       if (err) {
         return cb(err, null);
@@ -329,7 +329,7 @@ exports.findEmail = function (email, cb) {
     });
   };
 
-  exports.deleteEmployee   = function (section, cb) {
+  exports.deleteUser  = function (section, cb) {
     pool.getConnection((err, connection) => {
       if (err) {
         return cb(err, null);
@@ -350,7 +350,7 @@ exports.findEmail = function (email, cb) {
   };
   
   
- exports.getAllEmployees = function (cb) {
+ exports.getAllUsers = function (cb) {
     pool.getConnection((err, connection) => {
       if (err) {
         console.log('Error: ' + err.message);

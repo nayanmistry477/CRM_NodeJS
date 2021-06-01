@@ -124,8 +124,7 @@ router.post('/createCustomer',
             
         })(req, res, next);
     },
-);
-
+); 
 
 router.post('/updateCustomer',
     (req, res, next) => {

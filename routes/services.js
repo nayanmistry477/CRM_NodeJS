@@ -42,7 +42,7 @@ router.post('/createService',
     }, (err, user) => {
 
 
-      var name = req.body.services.serviceName.trim()
+      var name = req.body.serviceName.trim()
       var validName = name.toLowerCase()
       Services.isServiceExists(validName,
         function (err, result) {
@@ -60,9 +60,8 @@ router.post('/createService',
 
           if (result.length == 0) {
 
-            const obj = req.body.services;
-            const nUser = {
-              serviceID: obj.serviceID,
+            const obj = req.body;
+            const nUser = { 
               serviceName: obj.serviceName,
               price: obj.price,
               isActive: 'true',
@@ -122,7 +121,7 @@ router.post('/createService',
     })(req, res, next);
   },
 );
-router.post('/createWizardService', upload.single('file1'),
+router.post('/createJobService', upload.single('file1'),
   (req, res, next) => {
 
     const errors = req.validationErrors();
@@ -684,151 +683,151 @@ router.post('/deleteService',
   },
 );
 
-router.post('/deleteProductList',
-  (req, res, next) => {
+// router.post('/deleteProductList',
+//   (req, res, next) => {
 
-    const errors = req.validationErrors();
-    if (errors) {
-      return next(new BadRequest(ErrCode.VALIDATION_FAILED, undefined, errors));
-    }
-    return next();
-  },
-  (req, res, next) => {
-    passport.authenticate('jwt', {
-      session: false,
-    }, (err, user) => {
-      const nUser = req.body;
-      Services.deleteProductList(nUser,
-        function (err, result1) {
-          if (err) {
-            //Database connection error
-            return res.json({
-              success: false,
-              data: {
-                status: 0,
-                message: err.message,
-                result1: []
-              },
-            });
-          }
-          if (result1 === undefined || result1 === null || result1.length == 0) {
-            return res.json({
-              success: true,
-              data: {
-                status: 0,
-                message: 'Product Delete Failed',
-                result1: {}
-              },
-            });
-          }
+//     const errors = req.validationErrors();
+//     if (errors) {
+//       return next(new BadRequest(ErrCode.VALIDATION_FAILED, undefined, errors));
+//     }
+//     return next();
+//   },
+//   (req, res, next) => {
+//     passport.authenticate('jwt', {
+//       session: false,
+//     }, (err, user) => {
+//       const nUser = req.body;
+//       Services.deleteProductList(nUser,
+//         function (err, result1) {
+//           if (err) {
+//             //Database connection error
+//             return res.json({
+//               success: false,
+//               data: {
+//                 status: 0,
+//                 message: err.message,
+//                 result1: []
+//               },
+//             });
+//           }
+//           if (result1 === undefined || result1 === null || result1.length == 0) {
+//             return res.json({
+//               success: true,
+//               data: {
+//                 status: 0,
+//                 message: 'Product Delete Failed',
+//                 result1: {}
+//               },
+//             });
+//           }
 
-          return res.json({
-            success: true,
-            data: {
-              status: 1,
-              message: 'Product Deleted successfully.',
-              result1
-            },
-          });
-        });
+//           return res.json({
+//             success: true,
+//             data: {
+//               status: 1,
+//               message: 'Product Deleted successfully.',
+//               result1
+//             },
+//           });
+//         });
 
-    })(req, res, next);
-  },
-);
+//     })(req, res, next);
+//   },
+// );
 
-router.post('/createOnlyService',
-  (req, res, next) => {
+// router.post('/createOnlyService',
+//   (req, res, next) => {
 
-    const errors = req.validationErrors();
-    if (errors) {
-      return next(new BadRequest(ErrCode.VALIDATION_FAILED, undefined, errors));
-    }
-    return next();
-  },
-  (req, res, next) => {
-    passport.authenticate('jwt', {
-      session: false,
-    }, (err, user) => {
+//     const errors = req.validationErrors();
+//     if (errors) {
+//       return next(new BadRequest(ErrCode.VALIDATION_FAILED, undefined, errors));
+//     }
+//     return next();
+//   },
+//   (req, res, next) => {
+//     passport.authenticate('jwt', {
+//       session: false,
+//     }, (err, user) => {
 
      
-        var name = req.body.serviceName.trim()
-        var validName = name.toLowerCase()
-        Services.isServiceExists(validName,
-          function (err, result) {
-            if (err) {
-              //Database connection error
-              return res.json({
-                success: false,
-                data: {
-                  status: 0,
-                  message: err.message,
-                  result
-                },
-              });
-            }
+//         var name = req.body.serviceName.trim()
+//         var validName = name.toLowerCase()
+//         Services.isServiceExists(validName,
+//           function (err, result) {
+//             if (err) {
+//               //Database connection error
+//               return res.json({
+//                 success: false,
+//                 data: {
+//                   status: 0,
+//                   message: err.message,
+//                   result
+//                 },
+//               });
+//             }
   
-            if (result.length == 0) {
+//             if (result.length == 0) {
   
-              const obj = req.body;
-              const nUser = {
-                serviceName: obj.serviceName,
-                price: obj.price,
-                isActive: 'true',
-                createdDate: new Date(),
-              };
+//               const obj = req.body;
+//               const nUser = {
+//                 serviceName: obj.serviceName,
+//                 price: obj.price,
+//                 isActive: 'true',
+//                 createdDate: new Date(),
+//               };
         
         
-              Services.createOnlyService(nUser,
-                function (err, result1) {
-                  if (err) {
-                    //Database connection error
-                    return res.json({
-                      success: false,
-                      data: {
-                        status: 0,
-                        message: err.message,
-                        result1: []
-                      },
-                    });
-                  }
-                  if (result1 === undefined || result1 === null || result1.length == 0) {
-                    return res.json({
-                      success: true,
-                      data: {
-                        status: 0,
-                        message: ' Service Create Failed',
-                        result1: {}
-                      },
-                    });
-                  }
+//               Services.createOnlyService(nUser,
+//                 function (err, result1) {
+//                   if (err) {
+//                     //Database connection error
+//                     return res.json({
+//                       success: false,
+//                       data: {
+//                         status: 0,
+//                         message: err.message,
+//                         result1: []
+//                       },
+//                     });
+//                   }
+//                   if (result1 === undefined || result1 === null || result1.length == 0) {
+//                     return res.json({
+//                       success: true,
+//                       data: {
+//                         status: 0,
+//                         message: ' Service Create Failed',
+//                         result1: {}
+//                       },
+//                     });
+//                   }
         
-                  return res.json({
-                    success: true,
-                    data: {
-                      status: 1,
-                      message: ' Service Created successfully.',
-                      result1
-                    },
-                  });
-                });
+//                   return res.json({
+//                     success: true,
+//                     data: {
+//                       status: 1,
+//                       message: ' Service Created successfully.',
+//                       result1
+//                     },
+//                   });
+//                 });
         
   
-            } else {
-              // user exist with same email id 
-              return res.json({
-                success: false,
-                data: {
-                  status: 0,
-                  message: 'Service Already Exists',
-                  result: []
-                },
-              });;
-            }
-          })
+//             } else {
+//               // user exist with same email id 
+//               return res.json({
+//                 success: false,
+//                 data: {
+//                   status: 0,
+//                   message: 'Service Already Exists',
+//                   result: []
+//                 },
+//               });;
+//             }
+//           })
 
-    })(req, res, next);
-  },
-);
+//     })(req, res, next);
+//   },
+// );
 
 router.post('/createProduct_ServiceFinal',
   (req, res, next) => {
@@ -956,124 +955,63 @@ router.post('/updateProduct_ServiceFinal',
   },
 );
 
-router.post('/updateProduct_ServiceFinalInvoice',
-  (req, res, next) => {
-
-    const errors = req.validationErrors();
-    if (errors) {
-      return next(new BadRequest(ErrCode.VALIDATION_FAILED, undefined, errors));
-    }
-    return next();
-  },
-  (req, res, next) => {
-    passport.authenticate('jwt', {
-      session: false,
-    }, (err, user) => {
-
-      const obj = req.body;
-      // const nUser = { 
-      //     psID:obj.psID,
-      //     name: obj.name,  
-      //     quantity: obj.quantity,  
-      //     price:obj.price, 
-      // };
 
 
-      Services.updateProduct_ServiceFinalInvoice(obj,
-        function (err, result1) {
-          if (err) {
-            //Database connection error
-            return res.json({
-              success: false,
-              data: {
-                status: 0,
-                message: err.message,
-                result1: []
-              },
-            });
-          }
-          if (result1 === undefined || result1 === null || result1.length == 0) {
-            return res.json({
-              success: true,
-              data: {
-                status: 0,
-                message: ' Item Update Failed',
-                result1: {}
-              },
-            });
-          }
+// router.post('/updateJobStatus',
+//   (req, res, next) => {
 
-          return res.json({
-            success: true,
-            data: {
-              status: 1,
-              message: ' Item Updated successfully.',
-              result1
-            },
-          });
-        });
+//     const errors = req.validationErrors();
+//     if (errors) {
+//       return next(new BadRequest(ErrCode.VALIDATION_FAILED, undefined, errors));
+//     }
+//     return next();
+//   },
+//   (req, res, next) => {
+//     passport.authenticate('jwt', {
+//       session: false,
+//     }, (err, user) => {
+
+//       const obj = req.body;
+
+//       Services.updateJobStatus(obj,
+//         function (err, result1) {
+//           if (err) {
+//             //Database connection error
+//             return res.json({
+//               success: false,
+//               data: {
+//                 status: 0,
+//                 message: err.message,
+//                 result1: []
+//               },
+//             });
+//           }
+//           if (result1 === undefined || result1 === null || result1.length == 0) {
+//             return res.json({
+//               success: true,
+//               data: {
+//                 status: 0,
+//                 message: 'Job status Update Failed',
+//                 result1: {}
+//               },
+//             });
+//           }
+
+//           return res.json({
+//             success: true,
+//             data: {
+//               status: 1,
+//               message: ' Job status Updated successfully.',
+//               result1
+//             },
+//           });
+//         });
 
 
 
-    })(req, res, next);
-  },
-);
-
-router.post('/updateJobStatus',
-  (req, res, next) => {
-
-    const errors = req.validationErrors();
-    if (errors) {
-      return next(new BadRequest(ErrCode.VALIDATION_FAILED, undefined, errors));
-    }
-    return next();
-  },
-  (req, res, next) => {
-    passport.authenticate('jwt', {
-      session: false,
-    }, (err, user) => {
-
-      const obj = req.body;
-
-      Services.updateJobStatus(obj,
-        function (err, result1) {
-          if (err) {
-            //Database connection error
-            return res.json({
-              success: false,
-              data: {
-                status: 0,
-                message: err.message,
-                result1: []
-              },
-            });
-          }
-          if (result1 === undefined || result1 === null || result1.length == 0) {
-            return res.json({
-              success: true,
-              data: {
-                status: 0,
-                message: 'Job status Update Failed',
-                result1: {}
-              },
-            });
-          }
-
-          return res.json({
-            success: true,
-            data: {
-              status: 1,
-              message: ' Job status Updated successfully.',
-              result1
-            },
-          });
-        });
-
-
-
-    })(req, res, next);
-  },
-);
+//     })(req, res, next);
+//   },
+// );
 
 
 
@@ -1126,7 +1064,7 @@ router.get('/getAllServices',
 
 
 
-router.post('/updateJobData',
+router.post('/updateJobService',
   (req, res, next) => {
 
     const errors = req.validationErrors();
@@ -1156,7 +1094,7 @@ router.post('/updateJobData',
     
       nData.estDate = estdate;
       nData.completedDate = cDate
-      Services.updateJobData(nData,
+      Services.updateJobService(nData,
         function (err, result1) {
           if (err) {
             //Database connection error
@@ -1534,52 +1472,7 @@ router.post('/getProducts_ServiceByjobID',
     })(req, res, next);
   }
 );
-router.post('/getProducts_ServiceByinvoiceID',
-  function (req, res, next) {
 
-    passport.authenticate('jwt', { session: false }, function (err, user) {
-      // console.log("in get users", user);
-      if (!a.isEmpty(user) && !err) {
-
-        var data = req.body;
-        Services.getProducts_ServiceByinvoiceID(data, function (err, result) {
-          if (err) {
-            return next(new InternalServer(ErrCode.DB_CONNECTION_ERROR, undefined, err.message));
-          }
-          if (result === undefined || result === null || result.length == 0) {
-            return res.json({
-              success: true,
-
-              status: 0,
-              message: 'not init',
-              result: []
-
-            });
-          }
-          return res.json({
-            success: true,
-            status: 1,
-            result
-
-          });
-        })
-      }
-
-      else {
-        // var err = new Error('User is not logged in');
-        // return next(err);
-        return res.json({
-          success: false,
-          data: {
-            status: 0,
-            message: err.message,
-            result: []
-          },
-        });
-      }
-    })(req, res, next);
-  }
-);
 router.post('/getattachmentsByjobID',
   function (req, res, next) {
 
@@ -1825,52 +1718,52 @@ router.get('/getjobsByUserId',
   }
 );
 
-router.post('/getChecklistByItemType',
-  function (req, res, next) {
+// router.post('/getChecklistByItemType',
+//   function (req, res, next) {
 
-    passport.authenticate('jwt', { session: false }, function (err, user) {
+//     passport.authenticate('jwt', { session: false }, function (err, user) {
 
-      if (!a.isEmpty(user) && !err) {
+//       if (!a.isEmpty(user) && !err) {
 
-        var nData = req.body;
-        Services.getChecklistByItemType(nData, function (err, result) {
-          if (err) {
-            return next(new InternalServer(ErrCode.DB_CONNECTION_ERROR, undefined, err.message));
-          }
-          if (result === undefined || result === null || result.length == 0) {
-            return res.json({
-              success: true,
+//         var nData = req.body;
+//         Services.getChecklistByItemType(nData, function (err, result) {
+//           if (err) {
+//             return next(new InternalServer(ErrCode.DB_CONNECTION_ERROR, undefined, err.message));
+//           }
+//           if (result === undefined || result === null || result.length == 0) {
+//             return res.json({
+//               success: true,
 
-              status: 0,
-              message: 'not init',
-              result: []
+//               status: 0,
+//               message: 'not init',
+//               result: []
 
-            });
-          }
-          return res.json({
-            success: true,
-            status: 1,
-            result
+//             });
+//           }
+//           return res.json({
+//             success: true,
+//             status: 1,
+//             result
 
-          });
-        })
-      }
+//           });
+//         })
+//       }
 
-      else {
-        // var err = new Error('User is not logged in');
-        // return next(err);
-        return res.json({
-          success: false,
-          data: {
-            status: 0,
-            message: err.message,
-            result: []
-          },
-        });
-      }
-    })(req, res, next);
-  }
-);
+//       else {
+//         // var err = new Error('User is not logged in');
+//         // return next(err);
+//         return res.json({
+//           success: false,
+//           data: {
+//             status: 0,
+//             message: err.message,
+//             result: []
+//           },
+//         });
+//       }
+//     })(req, res, next);
+//   }
+// );
 
 
 module.exports = router;

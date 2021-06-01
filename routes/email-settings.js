@@ -28,11 +28,7 @@ const { EnvironmentObj } = require('../configs');
 var JOBSHEETPATH = './upload/Jobsheet/Jobsheet_'
 var WORKSHEETPATH = './upload/Worksheet/Worksheet_'
 var INVOICEPTH = "./upload/Invoice/Invoice_"
-
-//Note -> Keep file:/// then put path logo
-// var LOGOPATH ='file:///D:/CRM_Project/CRMAngular/src/assets/Capture.JPG'
-
-//For third party email
+ 
 var USERNAME=''
 var PASSWORD=''
 
@@ -103,109 +99,7 @@ router.post('/createEmailSettings',
         })(req, res, next);
     },
 );
-router.post('/updateEmailSettings',
-    (req, res, next) => {
-
-        const errors = req.validationErrors();
-        if (errors) {
-            return next(new BadRequest(ErrCode.VALIDATION_FAILED, undefined, errors));
-        }
-        return next();
-    },
-    (req, res, next) => {
-        passport.authenticate('jwt', {
-            session: false,
-        }, (err, user) => {
-            const nUser = req.body;
-            EmailSettings.EmailSettings(nUser,
-                function (err, result1) {
-                    if (err) {
-                        //Database connection error
-                        return res.json({
-                            success: false,
-                            data: {
-                                status: 0,
-                                message: err.message,
-                                result1: []
-                            },
-                        });
-                    }
-                    if (result1 === undefined || result1 === null || result1.length == 0) {
-                        return res.json({
-                            success: true,
-                            data: {
-                                status: 0,
-                                message: 'Update EmailSetting Failed',
-                                result1: {}
-                            },
-                        });
-                    }
-
-                    return res.json({
-                        success: true,
-                        data: {
-                            status: 1,
-                            message: 'EmailSetting Updated successfully.',
-                            result1
-                        },
-                    });
-                });
-
-        })(req, res, next);
-    },
-);
-
-// router.post('/deleteEmailSettings',
-//     (req, res, next) => {
-
-//         const errors = req.validationErrors();
-//         if (errors) {
-//             return next(new BadRequest(ErrCode.VALIDATION_FAILED, undefined, errors));
-//         }
-//         return next();
-//     },
-//     (req, res, next) => {
-//         passport.authenticate('jwt', {
-//             session: false,
-//         }, (err, user) => { 
-//                 const nUser = req.body; 
-//                 EmailSettings.deleteEmailSettings(nUser,
-//                     function (err, result1) {
-//                         if (err) {
-//                             //Database connection error
-//                             return res.json({
-//                                 success: false,
-//                                 data: {
-//                                     status: 0,
-//                                     message: err.message,
-//                                     result1: []
-//                                 },
-//                             });
-//                         }
-//                         if (result1 === undefined || result1 === null || result1.length == 0) {
-//                             return res.json({
-//                                 success: true,
-//                                 data: {
-//                                     status: 0,
-//                                     message: 'EmailSetting Delete Failed',
-//                                     result1: {}
-//                                 },
-//                             });
-//                         }
-
-//                         return res.json({
-//                             success: true,
-//                             data: {
-//                                 status: 1,
-//                                 message: 'EmailSetting Deleted successfully.',
-//                                 result1
-//                             },
-//                         });
-//                     }); 
-
-//         })(req, res, next);
-//     },
-// );
+ 
 
 router.get('/getAllEmailSettings',
     function (req, res, next) {
@@ -541,8 +435,7 @@ router.post('/generateJobSheet',
             }
         })(req, res, next);
     }
-);
-
+); 
 
 router.post('/generateWorkSheet',
     function (req, res, next) {

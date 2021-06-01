@@ -119,8 +119,7 @@ router.post('/createTechnician',
             
         })(req, res, next);
     },
-);
-
+); 
 
 router.post('/updateTechnician',
     (req, res, next) => {
@@ -172,9 +171,7 @@ router.post('/updateTechnician',
            
         })(req, res, next);
     },
-);
-
- 
+); 
 
 router.post('/deleteTechnician',
     (req, res, next) => {

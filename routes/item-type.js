@@ -158,8 +158,7 @@ router.post('/updateItemType',
 
         })(req, res, next);
     },
-);
-
+); 
 router.post('/deleteItemType',
     (req, res, next) => {
 
@@ -210,6 +209,52 @@ router.post('/deleteItemType',
 
         })(req, res, next);
     },
+);
+router.get('/getAllItemTypes',
+    function (req, res, next) {
+
+        passport.authenticate('jwt', { session: false }, function (err, user) {
+            // console.log("in get users", user);
+            if (!a.isEmpty(user) && !err) {
+
+                //   var user_id = req.body;
+                ItemType.getAllItemTypes(function (err, result) {
+                    if (err) {
+                        return next(new InternalServer(ErrCode.DB_CONNECTION_ERROR, undefined, err.message));
+                    }
+                    if (result === undefined || result === null || result.length == 0) {
+                        return res.json({
+                            success: true,
+
+                            status: 0,
+                            message: 'not init',
+                            result: []
+
+                        });
+                    }
+                    return res.json({
+                        success: true,
+                        status: 1,
+                        result
+
+                    });
+                })
+            }
+
+            else {
+                // var err = new Error('User is not logged in');
+                // return next(err);
+                return res.json({
+                    success: false,
+                    data: {
+                        status: 0,
+                        message: err.message,
+                        result: []
+                    },
+                });
+            }
+        })(req, res, next);
+    }
 );
 router.post('/createChecklist',
     (req, res, next) => {
@@ -307,59 +352,7 @@ router.post('/createChecklist',
 
         })(req, res, next);
     },
-);
-
-router.post('/deleteChecklist',
-    (req, res, next) => {
-
-        const errors = req.validationErrors();
-        if (errors) {
-            return next(new BadRequest(ErrCode.VALIDATION_FAILED, undefined, errors));
-        }
-        return next();
-    },
-    (req, res, next) => {
-        passport.authenticate('jwt', {
-            session: false,
-        }, (err, user) => {
-            const nUser = req.body;
-            ItemType.deleteChecklist(nUser,
-                function (err, result1) {
-                    if (err) {
-                        //Database connection error
-                        return res.json({
-                            success: false,
-                            data: {
-                                status: 0,
-                                message: err.message,
-                                result1: []
-                            },
-                        });
-                    }
-                    if (result1 === undefined || result1 === null || result1.length == 0) {
-                        return res.json({
-                            success: true,
-                            data: {
-                                status: 0,
-                                message: 'Checklist Delete Failed',
-                                result1: {}
-                            },
-                        });
-                    }
-
-                    return res.json({
-                        success: true,
-                        data: {
-                            status: 1,
-                            message: 'Checklist item Deleted successfully.',
-                            result1
-                        },
-                    });
-                });
-
-        })(req, res, next);
-    },
-);
+); 
 router.post('/updateChecklist',
     (req, res, next) => {
 
@@ -411,53 +404,57 @@ router.post('/updateChecklist',
         })(req, res, next);
     },
 );
-router.get('/getAllItemTypes',
-    function (req, res, next) {
+router.post('/deleteChecklist',
+    (req, res, next) => {
 
-        passport.authenticate('jwt', { session: false }, function (err, user) {
-            // console.log("in get users", user);
-            if (!a.isEmpty(user) && !err) {
-
-                //   var user_id = req.body;
-                ItemType.getAllItemTypes(function (err, result) {
+        const errors = req.validationErrors();
+        if (errors) {
+            return next(new BadRequest(ErrCode.VALIDATION_FAILED, undefined, errors));
+        }
+        return next();
+    },
+    (req, res, next) => {
+        passport.authenticate('jwt', {
+            session: false,
+        }, (err, user) => {
+            const nUser = req.body;
+            ItemType.deleteChecklist(nUser,
+                function (err, result1) {
                     if (err) {
-                        return next(new InternalServer(ErrCode.DB_CONNECTION_ERROR, undefined, err.message));
-                    }
-                    if (result === undefined || result === null || result.length == 0) {
+                        //Database connection error
                         return res.json({
-                            success: true,
-
-                            status: 0,
-                            message: 'not init',
-                            result: []
-
+                            success: false,
+                            data: {
+                                status: 0,
+                                message: err.message,
+                                result1: []
+                            },
                         });
                     }
+                    if (result1 === undefined || result1 === null || result1.length == 0) {
+                        return res.json({
+                            success: true,
+                            data: {
+                                status: 0,
+                                message: 'Checklist Delete Failed',
+                                result1: {}
+                            },
+                        });
+                    }
+
                     return res.json({
                         success: true,
-                        status: 1,
-                        result
-
+                        data: {
+                            status: 1,
+                            message: 'Checklist item Deleted successfully.',
+                            result1
+                        },
                     });
-                })
-            }
-
-            else {
-                // var err = new Error('User is not logged in');
-                // return next(err);
-                return res.json({
-                    success: false,
-                    data: {
-                        status: 0,
-                        message: err.message,
-                        result: []
-                    },
                 });
-            }
-        })(req, res, next);
-    }
-);
 
+        })(req, res, next);
+    },
+); 
 router.post('/getCheckListByID',
     function (req, res, next) {
 

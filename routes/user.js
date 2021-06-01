@@ -7,7 +7,7 @@ var multer = require('multer');
 var auth = require('../helpers/auth/jwt');
 var guid = require('aguid');
 var LocalStrategy = require('passport-local').Strategy;
-var employee = require('../models/employee');
+var User = require('../models/user');
 var generator = require('generate-password');
 const nodemailer = require('nodemailer');
 
@@ -49,7 +49,7 @@ passport.use(new LocalStrategy({
     session: true
 },
     function (msg, email, password, cb) {
-        employee.signIn(email, password, function (err, result) {
+        User.signIn(email, password, function (err, result) {
             if (err) {
                 return cb(new InternalServer(ErrCode.DB_CONNECTION_ERROR, undefined, err.message));
             }
@@ -80,7 +80,7 @@ router.post('/createUser',
     function (req, res, next) {
 
 
-        employee.doesEmailExist(req.body.email,
+        User.doesEmailExist(req.body.email,
             function (err, result) {
                 if (err) {
                     //Database connection error
@@ -117,7 +117,7 @@ router.post('/createUser',
 
                     };
 
-                    employee.signUp(user, function (err, result1) {
+                    User.signUp(user, function (err, result1) {
                         if (err) {
                             //Database connection error
                             return res.json({
@@ -222,7 +222,7 @@ router.post('/getUsersByID',
         //   if (!a.isEmpty(user) && !err) {
 
         var user_id = req.body;
-        employee.getUserById(user_id, function (err, result) {
+        User.getUserById(user_id, function (err, result) {
             if (err) {
                 return next(new InternalServer(ErrCode.DB_CONNECTION_ERROR, undefined, err.message));
             }
@@ -266,7 +266,7 @@ router.get('/getUserByToken',
             if (!a.isEmpty(user) && !err) {
 
                 var user = user[0].id
-                employee.getUserByToken(user, function (err, result) {
+                User.getUserByToken(user, function (err, result) {
                     if (err) {
                         return next(new InternalServer(ErrCode.DB_CONNECTION_ERROR, undefined, err.message));
                     }
@@ -304,49 +304,49 @@ router.get('/getUserByToken',
         })(req, res, next);
     });
 
-    router.get('/getUserByTokenDemo/:id',
-    function (req, res, next) {
-        // passport.authenticate('jwt', { session: false }, function (err, user) {
-        //     if (!a.isEmpty(user) && !err) {
+    // router.get('/getUserByTokenDemo/:id',
+    // function (req, res, next) {
+    //     // passport.authenticate('jwt', { session: false }, function (err, user) {
+    //     //     if (!a.isEmpty(user) && !err) {
 
-                var user = req.params.id
-                employee.getUserByToken(user, function (err, result) {
-                    if (err) {
-                        return next(new InternalServer(ErrCode.DB_CONNECTION_ERROR, undefined, err.message));
-                    }
-                    if (result === undefined || result === null || result.length == 0) {
-                        return res.json({
-                            success: true,
-                            data: {
-                                status: 0,
-                                message: 'not init',
-                                result: []
-                            },
-                        });
-                    }
+    //             var user = req.params.id
+    //             User.getUserByToken(user, function (err, result) {
+    //                 if (err) {
+    //                     return next(new InternalServer(ErrCode.DB_CONNECTION_ERROR, undefined, err.message));
+    //                 }
+    //                 if (result === undefined || result === null || result.length == 0) {
+    //                     return res.json({
+    //                         success: true,
+    //                         data: {
+    //                             status: 0,
+    //                             message: 'not init',
+    //                             result: []
+    //                         },
+    //                     });
+    //                 }
 
-                    return res.json({
-                        success: true,
+    //                 return res.json({
+    //                     success: true,
 
-                        status: 1,
-                        result
+    //                     status: 1,
+    //                     result
 
-                    });
-                })
-        //     } else {
-        //         // var err = new Error('User is not logged in');
-        //         // return next(err);
-        //         return res.json({
-        //             success: false,
-        //             data: {
-        //                 status: 0,
-        //                 message: err.message,
-        //                 result: []
-        //             },
-        //         });
-        //     }
-        // })(req, res, next);
-    });
+    //                 });
+    //             })
+    //     //     } else {
+    //     //         // var err = new Error('User is not logged in');
+    //     //         // return next(err);
+    //     //         return res.json({
+    //     //             success: false,
+    //     //             data: {
+    //     //                 status: 0,
+    //     //                 message: err.message,
+    //     //                 result: []
+    //     //             },
+    //     //         });
+    //     //     }
+    //     // })(req, res, next);
+    // });
 
 router.post('/updateUser',
     (req, res, next) => {
@@ -362,7 +362,7 @@ router.post('/updateUser',
             session: false,
         }, (err, user) => {
             const nUser = req.body;
-            employee.updateEmployee(nUser,
+            User.updateUser(nUser,
                 function (err, result1) {
                     if (err) {
                         //Database connection error
@@ -414,7 +414,7 @@ router.post('/deleteUser',
             session: false,
         }, (err, user) => {
             const nUser = req.body;
-            employee.deleteEmployee(nUser,
+            User.deleteUser(nUser,
                 function (err, result1) {
                     if (err) {
                         //Database connection error
@@ -460,7 +460,7 @@ router.get('/getAllUsers',
             if (!a.isEmpty(user) && !err) {
 
                 //   var user_id = req.body;
-                employee.getAllEmployees(function (err, result) {
+                User.getAllUsers(function (err, result) {
                     if (err) {
                         return next(new InternalServer(ErrCode.DB_CONNECTION_ERROR, undefined, err.message));
                     }
@@ -534,7 +534,7 @@ router.post('/changePassword',
             if (!a.isEmpty(user) && !err) {
                 var loggedInUser = user[0];
                 const updatePass = req.body;
-                employee.isPasswordMatch(updatePass, loggedInUser,
+                User.isPasswordMatch(updatePass, loggedInUser,
                     function (err, isMatch) {
                         if (err) {
                             //Database connection error
@@ -548,7 +548,7 @@ router.post('/changePassword',
                             });
                         }
                         if (isMatch) {
-                            employee.changePassword(updatePass, loggedInUser,
+                            User.changePassword(updatePass, loggedInUser,
                                 function (err, result) {
                                     if (err) {
                                         //Database connection error
@@ -630,7 +630,7 @@ router.post('/forgotpassword',
     //     return next();
     // },
     function (req, res, next) {
-        employee.findEmail(req.body.email,
+        User.findEmail(req.body.email,
             function (err, result) {
                 if (err) {
                     //Database connection error
@@ -697,7 +697,7 @@ router.post('/recoveryPassword',
 
         const updatePass = req.body; 
 
-        employee.recoveryPassword(updatePass,
+        User.recoveryPassword(updatePass,
             function (err, result) {
                 if (err) {
                     //Database connection error
@@ -751,7 +751,7 @@ router.post('/updateCompanySettings',
             obj.createdDate = new Date();
             obj.isActive = 'true'
 
-            employee.updateCompanySettings(obj,
+            User.updateCompanySettings(obj,
                 function (err, result1) {
                     if (err) {
                         //Database connection error
@@ -799,7 +799,7 @@ router.get('/getCompanyDetails',
             if (!a.isEmpty(user) && !err) {
 
                 //   var user_id = req.body;
-                employee.getCompanyDetails(function (err, result) {
+                User.getCompanyDetails(function (err, result) {
                     if (err) {
                         return next(new InternalServer(ErrCode.DB_CONNECTION_ERROR, undefined, err.message));
                     }

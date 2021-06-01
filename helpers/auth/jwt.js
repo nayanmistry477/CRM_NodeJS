@@ -1,7 +1,7 @@
 var passport = require('passport');
 var passportJWT = require('passport-jwt');
 var jwt = require('jsonwebtoken');
-var employee = require('../../models/employee');
+var User = require('../../models/user');
 var ExtractJwt = passportJWT.ExtractJwt;
 var Strategy = passportJWT.Strategy;
 var jwtSession = false;
@@ -18,7 +18,7 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
-  employee.findById(id, function (err, user) {
+  User.findById(id, function (err, user) {
    return done(err, user);
   });
 });
@@ -38,7 +38,7 @@ module.exports = function () {
           null);
     }
 
-    employee.findById(payload.user, function (err, results) {
+    User.findById(payload.user, function (err, results) {
       // console.log("findById", results)
       if (!_.isArray(results) || results.length == 0) {
         return done(

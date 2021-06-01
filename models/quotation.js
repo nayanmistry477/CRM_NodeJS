@@ -277,7 +277,7 @@ exports.createQuotation = function (quote, cb) {
           if (service[i].ID == undefined) {
   
             var proid = null
-            connection.query('INSERT INTO `sales_product_service` ( `serviceID`,`invoiceID`,`name`,`price`,`quantity`,`createdDate`,`isActive`) VALUES (?,?,?,?,?,?,?)',
+            connection.query('INSERT INTO `sales_product_service` (`serviceID`,`invoiceID`,`name`,`price`,`quantity`,`createdDate`,`isActive`) VALUES (?,?,?,?,?,?,?)',
               [service[i].serviceID, service[i].invoiceID, service[i].name, service[i].price, service[i].quantity, date, status],
               (err, product_list, fields) => {
                   // connection.release();

@@ -126,8 +126,7 @@ router.post('/updateQuotation',
            
         })(req, res, next);
     },
-);
-
+); 
  
 router.post('/deleteQuotation',
     (req, res, next) => {
@@ -177,9 +176,7 @@ router.post('/deleteQuotation',
            
         })(req, res, next);
     },
-)
-  
- 
+) 
 
 router.post('/getJobByQuoteID',
 function (req, res, next) {
@@ -273,8 +270,7 @@ function (req, res, next) {
     }
   })(req, res, next);
 }
-);
-
+); 
  
 router.post('/getQuotationByID',
 function (req, res, next) {

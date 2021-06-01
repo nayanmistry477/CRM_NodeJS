@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 
 
 
-exports.createDesclaimer = function (emailSettings, cb) {
+exports.creatDisclaimer = function (emailSettings, cb) {
     pool.getConnection((err, connection) => {
         if (err) {
             console.log('Error: ' + err.message);
@@ -76,7 +76,7 @@ exports.createDesclaimer = function (emailSettings, cb) {
     });
 };
 
-exports.getDesclaimer = function (cb) {
+exports.getDisclaimer = function (cb) {
     pool.getConnection((err, connection) => {
       if (err) {
         console.log('Error: ' + err.message);

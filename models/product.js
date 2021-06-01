@@ -261,25 +261,25 @@ exports.createProduct = function (product, cb) {
       );
     });
   };
-  exports.updateProductOnJob  = function (section, cb) {
-    pool.getConnection((err, connection) => {
-      if (err) {
-        return cb(err, null);
-      }
-      return connection.query(
-        'UPDATE `product_master` SET productName = ?, sellPrice = ?,costPrice = ?, modifiedDate=now()  WHERE  id = ?', 
-        [section.name,section.price,section.price, section.id],
+  // exports.updateProductOnJob  = function (section, cb) {
+  //   pool.getConnection((err, connection) => {
+  //     if (err) {
+  //       return cb(err, null);
+  //     }
+  //     return connection.query(
+  //       'UPDATE `product_master` SET productName = ?, sellPrice = ?,costPrice = ?, modifiedDate=now()  WHERE  id = ?', 
+  //       [section.name,section.price,section.price, section.id],
   
-        (err2, results, fields) => {
-          connection.release();
-          if (err2) {
-            return cb(err2, null);
-          } 
-          return cb(null, results);
-        },
-      );
-    });
-  };
+  //       (err2, results, fields) => {
+  //         connection.release();
+  //         if (err2) {
+  //           return cb(err2, null);
+  //         } 
+  //         return cb(null, results);
+  //       },
+  //     );
+  //   });
+  // };
   exports.getAllProducts = function (cb) {
     pool.getConnection((err, connection) => {
       if (err) {
