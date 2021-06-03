@@ -69,7 +69,7 @@ const bcrypt = require('bcrypt');
     });
   };
     
-  exports.getPaymentById = function (id,cb) {
+  exports.getPaymentByInvoiceId = function (id,cb) {
     pool.getConnection((err, connection) => {
       if (err) {
         console.log('Error: ' + err.message);

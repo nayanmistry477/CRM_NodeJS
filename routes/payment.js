@@ -172,7 +172,7 @@ router.post('/deletePayment',
         })(req, res, next);
     },
 ) 
-router.post('/getPaymentById',
+router.post('/getPaymentByInvoiceId',
 function (req, res, next) {
 
   passport.authenticate('jwt', { session: false }, function (err, user) {
@@ -180,7 +180,7 @@ function (req, res, next) {
     if (!a.isEmpty(user) && !err) {
 
       var id = req.body;
-      Payment.getPaymentById(id,function (err, result) {
+      Payment.getPaymentByInvoiceId(id,function (err, result) {
         if (err) {
           return next(new InternalServer(ErrCode.DB_CONNECTION_ERROR, undefined, err.message));
         }

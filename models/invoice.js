@@ -179,7 +179,7 @@ exports.createInvoice = function (invoice, cb) {
       );
     });
   };
-
+;
   exports.updateProduct_ServiceFinalInvoice = function (service, cb) {
     pool.getConnection((err, connection) => {
       if (err) {
@@ -292,7 +292,61 @@ exports.createInvoice = function (invoice, cb) {
       return cb(err, service);
     });
   };
+  exports.createProduct_ServiceFinalInvoice =async  function (service, cb) {
+    pool.getConnection((err, connection) => {
+      if (err) {
+        console.log('Error: ' + err.message);
+        return cb(err, null);
+      }
+      var responseVal = false
 
+      cb(err, service);
+      for (var i = 0; i < service.length; i++) {
+        var date = new Date()
+        var status = 'true'; 
+  
+        if (service[i].productID != null) {
+          if (service[i].ID == undefined) {
+   
+            connection.query('INSERT INTO `sales_product_service` (`productID`,`invoiceID`,`name`,`price`,`unitPrice`,`quantity`,`createdDate`,`isActive`) VALUES (?,?,?,?,?,?,?,?)',
+              [service[i].productID, service[i].invoiceID, service[i].name, service[i].price, service[i].unitPrice, service[i].quantity, date, status],
+              (err, product_list, fields) => {
+                  // connection.release();
+                  responseVal = true
+                if (err) {
+                  console.log("Error: " + err.message);
+                  return cb(err, null)
+                }
+  
+              }
+            ); 
+          }
+        } else {
+  
+          if (service[i].ID == undefined) {
+  
+            var proid = null
+            connection.query('INSERT INTO `sales_product_service` (`serviceID`,`invoiceID`,`name`,`price`,`quantity`,`createdDate`,`isActive`) VALUES (?,?,?,?,?,?,?)',
+              [service[i].serviceID, service[i].invoiceID, service[i].name, service[i].price, service[i].quantity, date, status],
+              (err, product_list, fields) => {
+                  // connection.release();
+                  responseVal = true
+                if (err) {
+                  console.log("Error: " + err.message);
+                  return cb(err, null)
+                } 
+              }
+            ); 
+          }
+        }
+      }
+      if(responseVal == true){
+        connection.release();
+      }else{
+        connection.release();
+      }
+    });
+  }
   exports.getProducts_ServiceByinvoiceID = async function (data, cb) {
     pool.getConnection((err, connection) => {
       if (err) {

@@ -327,7 +327,7 @@ router.post('/sendQuoteMail',
                 });
                 var mailOptions = {
                     from: data.username,
-                    to: 'nayanmistry477@gmail.com',
+                    to: data.email,
                     subject: "Quotation",
                     html: ejsData,
                 };

@@ -405,7 +405,7 @@ router.post('/updateProduct_ServiceFinalQuote',
               success: true,
               data: {
                 status: 0,
-                message: ' Item Update Failed',
+                message: 'Item Update Failed',
                 result1: {}
               },
             });
@@ -415,7 +415,7 @@ router.post('/updateProduct_ServiceFinalQuote',
             success: true,
             data: {
               status: 1,
-              message: ' Item Updated successfully.',
+              message: 'Item Updated successfully.',
               result1
             },
           });
@@ -427,68 +427,7 @@ router.post('/updateProduct_ServiceFinalQuote',
   },
 );
 
-router.post('/createProduct_ServiceFinalInvoice',
-  (req, res, next) => {
 
-    const errors = req.validationErrors();
-    if (errors) {
-      return next(new BadRequest(ErrCode.VALIDATION_FAILED, undefined, errors));
-    }
-    return next();
-  },
-  (req, res, next) => {
-    passport.authenticate('jwt', {
-      session: false,
-    }, (err, user) => {
-
-      const obj = req.body;
-      // const nUser = { 
-      //     psID:obj.psID,
-      //     name: obj.name,  
-      //     quantity: obj.quantity,  
-      //     price:obj.price, 
-      // };
-
-
-      Quotation.createProduct_ServiceFinalInvoice(obj,
-        function (err, result1) {
-          if (err) {
-            //Database connection error
-            return res.json({
-              success: false,
-              data: {
-                status: 0,
-                message: err.message,
-                result1: []
-              },
-            });
-          }
-          if (result1 === undefined || result1 === null || result1.length == 0) {
-            return res.json({
-              success: true,
-              data: {
-                status: 0,
-                message: ' Item Update Failed',
-                result1: {}
-              },
-            });
-          }
-
-          return res.json({
-            success: true,
-            data: {
-              status: 1,
-              message: ' Item Updated successfully.',
-              result1
-            },
-          });
-        });
-
-
-
-    })(req, res, next);
-  },
-);
 router.post('/getProducts_ServiceByQuoteID',
   function (req, res, next) {
 
